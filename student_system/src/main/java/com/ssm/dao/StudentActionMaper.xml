@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.StudentActionDao">
+    <resultMap type="com.ssm.entity.StudentAction" id="StudentAction">
+        <id column="id" property="id"/>
+        <result column="reason" property="reason" />
+        <result column="days" property="days" />
+        <result column="result1" property="result1" />
+        <result column="student_id" property="stuId" />
+        <result column="status" property="status" />
+        <result column="teacher_count" property="teacherCount" />
+        <result column="user_count" property="userCount" />
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="com.ssm.entity.StudentAction">
+		insert into tb_studentaction(
+            reason,days,result1,student_id,status,teacher_count,user_count
+		)values(
+            #{reason},#{days},#{result1},#{stuId},#{status},#{teacherCount},#{userCount}
+		)
+	</insert>
+
+    <select id="query" resultMap="StudentAction">
+        select * from tb_studentaction
+        <include refid="StudentActionFindCriteria"/>
+    </select>
+
+
+    <select id="queryByStuId" resultMap="StudentAction">
+        select * from tb_studentaction where student_id = #{stuId}
+    </select>
+
+    <select id="queryById" resultMap="StudentAction">
+        select * from tb_studentaction where id = #{id}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(1) from tb_studentaction
+        <include refid="StudentActionFindCriteria"/>
+    </select>
+
+    <select id="detail" resultMap="StudentAction">
+        select * from tb_studentaction
+        <include refid="StudentActionFindCriteria"/>
+        limit 1
+    </select>
+
+
+    <select id="updateQueryById" resultMap="StudentAction">
+        select * from tb_studentaction where id = #{id}
+    </select>
+
+    <delete id="delete">
+        delete from tb_studentaction
+        <include refid="StudentActionFindCriteria"/>
+    </delete>
+
+    <update id="update">
+        update tb_studentaction set status = '已审批' , result1 = '通过' where id = #{id}
+    </update>
+
+    <update id="refuse">
+        update tb_studentaction set status = '已审批' , result1 = '未通过' where id = #{id}
+    </update>
+
+    <update id="update1">
+        update tb_studentaction
+        <include refid="StudentActionUpdateCriteria"/>
+        <include refid="StudentActionFindCriteria"/>
+    </update>
+    <sql id="StudentActionFindCriteria">
+        <where>
+            <if test="reason != null">and reason = #{reason}</if>
+            <if test="stuId != null and stuId !=''">and student_id = #{stuId}</if>
+            <if test="id != null">and id = #{id}</if>
+            <if test="status != null">and status = #{status}</if>
+            <if test="result1 != null">and result1 = #{result1}</if>
+            <if test="days != null">and days = #{days}</if>
+        </where>
+    </sql>
+    <sql id="StudentActionUpdateCriteria">
+        <set>
+            <if test="updateStatus != null and updateStatus != ''">status = #{status},</if>
+            <if test="updateResult1 != null and updateResult1 != ''">result1 = #{result1},</if>
+            <if test="updateDays != null and updateDays !=''">days = #{updateDays},</if>
+        </set>
+    </sql>
+</mapper>

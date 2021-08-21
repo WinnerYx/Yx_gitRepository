@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.StudentCountDao">
+    <resultMap type="com.ssm.entity.StudentCount" id="StudentCount">
+        <id column="id" property="id"/>
+        <result column="request_count" property="requestCount"/>
+        <result column="id" property="id"/>
+        <result column="studyStatus_count" property="studyStatusCount"/>
+        <result column="studentAction_count" property="studentActionCount"/>
+        <result column="job_count" property="jobCount"/>
+        <result column="student_id" property="studentId"/>
+    </resultMap>
+
+    <insert id="createCount" keyProperty="id" useGeneratedKeys="true" parameterType="com.ssm.entity.StudentCount">
+		insert into tb_studentcount(
+            request_count,
+            studyStatus_count,
+            studentAction_count,
+		    job_count,
+            student_id
+		)values(
+			#{requestCount},
+			#{studyStatusCount},
+			#{studentActionCount},
+            #{jobCount},
+            #{studentId}
+		)
+	</insert>
+
+    <select id="queryById" resultMap="StudentCount">
+        select * from tb_studentcount where student_id = #{studentId}
+    </select>
+
+    <update id="increaseRequestCount">
+        update tb_studentcount set request_count = request_count+1 where student_id = #{studentId}
+    </update>
+
+    <update id="decreaseRequestCount">
+        update tb_studentcount set request_count = request_count-1 where student_id = #{studentId}
+    </update>
+
+    <update id="increaseStudyStatusCount">
+        update tb_studentcount set  studyStatus_count =  studyStatus_count+1 where student_id = #{studentId}
+    </update>
+
+    <update id="decreaseStudyStatusCount">
+        update tb_studentcount set studyStatus_count =  studyStatus_count-1 where student_id = #{studentId}
+    </update>
+
+    <update id="increaseStudentActionCount">
+        update tb_studentcount set studentAction_count = studentAction_count+1 where student_id = #{studentId}
+    </update>
+
+    <update id="decreaseStudentActionCount">
+        update tb_studentcount set studentAction_count = studentAction_count-1 where student_id = #{studentId}
+    </update>
+
+    <update id="increaseJobCount">
+        update tb_studentcount set job_count = job_count+1 where student_id = #{studentId}
+    </update>
+
+    <update id="decreaseJobCount">
+        update tb_studentcount set job_count = job_count-1 where student_id = #{studentId}
+    </update>
+
+</mapper>

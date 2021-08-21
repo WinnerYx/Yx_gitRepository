@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.JobDao">
+    <resultMap type="com.ssm.entity.Job" id="Job">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="id" property="id"/>
+        <result column="workplace" property="workPlace"/>
+        <result column="worktime" property="workTime"/>
+        <result column="salary" property="salary"/>
+        <result column="student_id" property="stuId"/>
+        <result column="job_status" property="jobStatus"/>
+        <result column="result1" property="result1"/>
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="com.ssm.entity.Job">
+		insert into tb_job(
+		    salary,
+            name,
+            workplace,
+            worktime,
+			student_id,
+            job_status,
+		    result1
+		)values(
+			#{salary},
+			#{name},
+			#{workPlace},
+			#{workTime},
+			#{stuId},
+            #{jobStatus},
+            #{result1}
+		)
+	</insert>
+
+    <insert id="createJob" keyProperty="id" useGeneratedKeys="true" parameterType="com.ssm.entity.Job">
+        insert into tb_job(
+          salary,
+          name,
+          workplace,
+          worktime
+        )values(
+          #{salary},
+          #{name},
+          #{workPlace},
+          #{workTime}
+        )
+    </insert>
+
+    <select id="queryByStuId" resultMap="Job">
+        select * from tb_job where student_id = #{stuId}
+    </select>
+
+    <select id="queryListJobStatus" resultMap="Job">
+        select * from tb_job where student_id = 0
+        <if test="offset!=null and rows!=null">limit ${offset} , ${rows}</if>
+    </select>
+
+    <select id="query" resultMap="Job">
+        select * from tb_job
+        <include refid="JobFindCriteria"/>
+        <if test="offset!=null and rows!=null">limit ${offset} , ${rows}</if>
+    </select>
+
+    <select id="queryById" resultMap="Job">
+        select * from tb_job where id = #{id}
+    </select>
+
+    <select id="queryRequestJob" resultMap="Job">
+        select * from tb_job where student_id != 0
+        <if test="offset!=null and rows!=null">limit ${offset} , ${rows}</if>
+    </select>
+
+    <select id="queryJob" resultMap="Job">
+        select * from tb_job where student_id=0
+    </select>
+
+    <select id="queryJobById" resultMap="Job">
+        select * from tb_job where id=#{jobId}
+    </select>
+
+
+    <select id="count" resultType="int">
+        select count(1) from tb_job
+        <include refid="JobFindCriteria"/>
+    </select>
+
+    <select id="detail" resultMap="Job">
+        select * from tb_job
+        <include refid="JobFindCriteria"/>
+        limit 1
+    </select>
+
+    <delete id="delete">
+        delete from tb_job
+        <include refid="JobFindCriteria"/>
+    </delete>
+    <update id="update">
+        update tb_job set job_status = '已审批' , result1 = '通过' where id = #{id}
+    </update>
+
+    <update id="refuse">
+        update tb_job set job_status = '已审批' , result1 = '未通过' where id = #{id}
+    </update>
+
+    <update id="updateJob">
+        update tb_job
+        <include refid="JobUpdateCriteria"/>
+        <include refid="JobFindCriteria"/>
+    </update>
+    <sql id="JobFindCriteria">
+        <where>
+            <if test="name != null and name != ''">and name  like concat('%',#{name},'%')</if>
+            <if test="id != null and id !=''">and id = #{id}</if>
+            <if test="worktime != null and worktime != ''">and worktime = #{workTime}</if>
+            <if test="workplace != null and workplace != ''">and workplace = #{workPlace}</if>
+            <if test="salary != null and salary !=''">and salary = #{salary}</if>
+            <if test="student_id != null and student_id !=''">and student_id = #{stuId}</if>
+            <if test="job_status != null and job_status !=''">and job_status = #{jobStatus}</if>
+            <if test="result1 != null and result1 !=''">and result1 = #{result1}</if>
+        </where>
+    </sql>
+    <sql id="JobUpdateCriteria">
+        <set>
+            <if test="updateName != null and updateName != ''">name = #{updateName},</if>
+            <if test="updateId != null">id = #{updateId},</if>
+            <if test="updateWorkTime != null and updateWorkTime != ''">worktime = #{updateWorkTime},</if>
+            <if test="updateWorkPlace != null and updateWorkPlace != ''">workplace = #{updateWorkPlace},</if>
+            <if test="updateSalary != null and updateSalary !=''">salary = #{updateSalary},</if>
+            <if test="updateStuId != null">student_id = #{updateStuId},</if>
+            <if test="updateJobStatus != null">job_status = #{updateJobStatus}</if>
+            <if test="updateResult1 != null">result1 = #{updateResult1}</if>
+        </set>
+    </sql>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.UserCountDao">
+    <resultMap type="com.ssm.entity.UserCount" id="UserCount">
+        <id column="id" property="id"/>
+        <result column="request_count" property="requestCount"/>
+        <result column="id" property="id"/>
+        <result column="studyStatus_count" property="studyStatusCount"/>
+        <result column="studentAction_count" property="studentActionCount"/>
+        <result column="announcement_count" property="announcementCount"/>
+        <result column="job_count" property="jobCount"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <insert id="createCount" keyProperty="id" useGeneratedKeys="true" parameterType="com.ssm.entity.UserCount">
+		insert into tb_usercount(
+            request_count,
+            studyStatus_count,
+            studentAction_count,
+		    job_count,
+		    user_id,
+            announcement_count
+		)values(
+			#{requestCount},
+			#{studyStatusCount},
+			#{studentActionCount},
+            #{jobCount},
+            #{userId},
+		    #{announcementCount}
+		)
+	</insert>
+
+    <select id="queryById" resultMap="UserCount">
+        select * from tb_usercount where user_id = #{userId}
+    </select>
+
+    <update id="increaseRequestCount">
+        update tb_usercount set request_count = request_count+1 where user_id = #{userId}
+    </update>
+
+    <update id="increaseAnnouncementCount">
+        update tb_usercount set announcement_count = announcement_count+1 where user_id = #{userId}
+    </update>
+
+    <update id="decreaseAnnouncementCount">
+        update tb_usercount set announcement_count = announcement_count-1 where user_id = #{userId}
+    </update>
+
+    <update id="decreaseRequestCount">
+        update tb_usercount set request_count = request_count-1 where user_id = #{userId}
+    </update>
+
+    <update id="increaseStudyStatusCount">
+        update tb_usercount set  studyStatus_count =  studyStatus_count+1 where user_id = #{userId}
+    </update>
+
+    <update id="decreaseStudyStatusCount">
+        update tb_usercount set studyStatus_count =  studyStatus_count-1 where user_id = #{userId}
+    </update>
+
+    <update id="increaseStudentActionCount">
+        update tb_usercount set studentAction_count = studentAction_count+1 where user_id = #{userId}
+    </update>
+
+    <update id="decreaseStudentActionCount">
+        update tb_usercount set studentAction_count = studentAction_count-1 where user_id = #{userId}
+    </update>
+
+    <update id="increaseJobCount">
+        update tb_usercount set job_count = job_count+1 where user_id = #{userId}
+    </update>
+
+    <update id="decreaseJobCount">
+        update tb_usercount set job_count = job_count-1 where user_id = #{userId}
+    </update>
+
+</mapper>

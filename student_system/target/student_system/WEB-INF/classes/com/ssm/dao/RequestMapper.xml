@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.RequestDao">
+    <resultMap type="com.ssm.entity.Request" id="Request">
+        <id column="id" property="id"/>
+        <result column="reason" property="reason" />
+        <result column="days" property="days" />
+        <result column="result1" property="result1" />
+        <result column="student_id" property="stuId" />
+        <result column="status" property="status" />
+        <result column="teacher_count" property="teacherCount" />
+        <result column="user_count" property="userCount" />
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="com.ssm.entity.Request">
+		insert into tb_request(
+            reason,days,result1,student_id,status,teacher_count,user_count
+		)values(
+            #{reason},#{days},#{result1},#{stuId},#{status},#{teacherCount},#{userCount}
+		)
+	</insert>
+
+    <select id="studentQuery" resultMap="Request">
+        select * from tb_request
+        <include refid="RequestFindCriteria"/>
+    </select>
+
+    <select id="query" resultMap="Request">
+        select * from tb_request where days &lt;= 3
+    </select>
+
+    <select id="userQuery" resultMap="Request">
+        select * from tb_request where days &gt; 3
+    </select>
+
+    <select id="queryById" resultMap="Request">
+        select * from tb_request where id = #{parseInt}
+    </select>
+
+    <select id="updateQueryById" resultMap="Request">
+        select * from tb_request where id = #{id}
+    </select>
+
+    <select id="queryByStuId" resultMap="Request">
+        select * from tb_request where student_id = #{stuId}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(1) from tb_request
+        <include refid="RequestFindCriteria"/>
+    </select>
+
+    <select id="detail" resultMap="Request">
+        select * from tb_request
+        <include refid="RequestFindCriteria"/>
+        limit 1
+    </select>
+
+    <delete id="delete">
+        delete from tb_request
+        <include refid="RequestFindCriteria"/>
+    </delete>
+
+
+    <update id="update">
+        update tb_request set status = '已审批' , result1 = '通过' where id = #{id}
+    </update>
+
+    <update id="refuse">
+        update tb_request set status = '已审批' , result1 = '未通过' where id = #{id}
+    </update>
+
+    <update id="update1">
+        update tb_request
+        <include refid="RequestUpdateCriteria"/>
+        <include refid="RequestFindCriteria"/>
+    </update>
+
+    <sql id="RequestFindCriteria">
+        <where>
+            <if test="reason != null">and reason = #{reason}</if>
+            <if test="stuId != null and stuId !=''">and student_id = #{stuId}</if>
+            <if test="id != null">and id = #{id}</if>
+            <if test="status != null">and status = #{status}</if>
+            <if test="result1 != null">and result1 = #{result1}</if>
+            <if test="days != null and days !=''">and days = #{days}</if>
+        </where>
+    </sql>
+
+    <sql id="RequestUpdateCriteria">
+        <set>
+            <if test="updateStatus != null and updateStatus != ''">status = #{updateStatus},</if>
+            <if test="updateResult1 != null and updateResult1 != ''">result1 = #{updateResult1},</if>
+            <if test="updateReason != null and updateReason != ''">reason = #{updateReason},</if>
+            <if test="updateDays != null and updateDays != ''">days = #{updateDays},</if>
+        </set>
+    </sql>
+</mapper>

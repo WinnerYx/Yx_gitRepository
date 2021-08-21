@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.ClazzDao">
+    <resultMap type="com.ssm.entity.Clazz" id="Clazz">
+        <id column="id" property="id"/>
+        <result column="clazz_name" property="clazzName"/>
+        <result column="id" property="id"/>
+        <result column="remark" property="remark"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="teacher_id" property="teacherId"/>
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="com.ssm.entity.Clazz">
+		insert into tb_clazz(
+			clazz_name,
+			remark,
+			subject_id,
+            teacher_id
+		)values(
+			#{clazzName},
+			#{remark},
+			#{subjectId},
+            #{teacherId}
+		)
+	</insert>
+
+    <select id="query" resultMap="Clazz">
+        select * from tb_clazz
+        <include refid="ClazzFindCriteria"/>
+        <if test="offset!=null and rows!=null">limit ${offset} , ${rows}</if>
+    </select>
+
+    <select id="queryById" resultMap="Clazz">
+        select * from tb_clazz where id=#{id}
+    </select>
+
+    <select id="queryByName" resultMap="Clazz">
+        select * from tb_clazz where clazz_name=#{name}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(1) from tb_clazz
+        <include refid="ClazzFindCriteria"/>
+    </select>
+
+    <select id="detail" resultMap="Clazz">
+        select * from tb_clazz
+        <include refid="ClazzFindCriteria"/>
+        limit 1
+    </select>
+
+    <delete id="delete">
+        delete from tb_clazz
+        <include refid="ClazzFindCriteria"/>
+    </delete>
+    <update id="update">
+        update tb_clazz
+        <include refid="ClazzUpdateCriteria"/>
+        <include refid="ClazzFindCriteria"/>
+    </update>
+    <sql id="ClazzFindCriteria">
+        <where>
+            <if test="clazzName != null and clazzName != ''">and clazz_name like concat('%',#{clazzName},'%')</if>
+            <if test="id != null">and id = #{id}</if>
+            <if test="remark != null and remark != ''">and remark = #{remark}</if>
+            <if test="subjectId != null">and subject_id = #{subjectId}</if>
+            <if test="teacherId != null">and teacher_id = #{teacherId}</if>
+        </where>
+    </sql>
+    <sql id="ClazzUpdateCriteria">
+        <set>
+            <if test="updateClazzName != null and updateClazzName != ''">clazz_name = #{updateClazzName},</if>
+            <if test="updateId != null">id = #{updateId},</if>
+            <if test="updateRemark != null and updateRemark != ''">remark = #{updateRemark},</if>
+            <if test="updateSubjectId != null">subject_id = #{updateSubjectId},</if>
+            <if test="updateTeacherId != null">teacher_id = #{updateTeacherId},</if>
+        </set>
+    </sql>
+</mapper>
